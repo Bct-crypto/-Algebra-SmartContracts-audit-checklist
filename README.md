@@ -1,147 +1,43 @@
 # SmartContracts-audit-checklist
-![SmartContracts-audit-checklist(3)](https://user-images.githubusercontent.com/45327979/173427545-a26485a2-af4b-4cc0-8171-e308cefbad29.png)
 
-
-> A checklist of things to look for when auditing Solidity smart contracts.
+Credit to Tamjid under MIT license: https://github.com/tamjid0x01/SmartContracts-audit-checklist
 
 This is not a comprehensive list and solidity is quickly evolving so please do due dilegence on your part.
-
 Not all listed items will apply to your specific smart contract.
 
-## Audit Scoping 
-Before starting the audits you need to know about the projects codebase. You can easily do this task using [Consensys](https://diligence.consensys.net)'s [Solidity-Code-Metrics](https://github.com/ConsenSys/solidity-metrics). 
-
-Here the details, How you can easy understand the projets scop.
-
-[🌐](https://www.npmjs.com/package/solidity-code-metrics) `npm install solidity-code-metrics` 
-
-The number-crunching enginge behind 📊[tintinweb.solidity-metrics](https://marketplace.visualstudio.com/items?itemName=tintinweb.solidity-metrics).
-
-![vscode-solidity-metrics3](https://user-images.githubusercontent.com/2865694/78451004-0252de00-7683-11ea-93d7-4c5dc436a14b.gif)
-
-Also, some helpers mention here it's can help before audit.
-
-  #### SLoc ([cloc](https://github.com/AlDanial/cloc#install-via-package-manager))
-
-  ```bash
-  $ cloc */
-        86 text files.
-      86 unique files.
-       1 file ignored.
-
-github.com/AlDanial/cloc v 1.82  T=0.24 s (354.5 files/s, 86952.0 lines/s)
--------------------------------------------------------------------------------
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-Solidity                        72           3027           6000          10274
-TypeScript                      13            223             86           1239
--------------------------------------------------------------------------------
-SUM:                            85           3250           6086          11513
--------------------------------------------------------------------------------
-
-  ```
-
-  #### number of solidity  files
-  ```bash
-  $ find . -name '*.sol' | wc -l
-  72
-
-  ```
-  #### Lines of code per solidity file
-  ```bash
-  $ find . -name '*.sol' | xargs wc -l
-   137 ./contracts/BaseJumpRateModelV2.sol
-    84 ./contracts/CarefulMath.sol
-    39 ./contracts/CErc20Immutable.sol
-   190 ./contracts/CEther.sol
-...
-
-   148 ./contracts/Unitroller.sol
-    85 ./contracts/WhitePaperInterestRateModel.sol
- 19293 total
-
-  ```
-
-  #### SHA256 hash of files
-
-  ```bash
-
-$ shasum -a 256 contracts/*.sol
-32111c1b2bcdb051fa5c2564cd2a5e0662e699472ca5373499f67dca9c71cf47  contracts/BaseJumpRateModelV2.sol
-c98ee33d13672016db21d4d6353b45eccb5c9f77499df77c254574a0481c0c03  contracts/CDaiDelegate.sol
-650bdf61c685b50b3f016553f822c35b4c605a0c477791b35f3de0a7cb61d390  contracts/CNft.sol
-
-...
-
-a56f8cf884f0bceb918bbb078aaa5cd3ef90002323787729d70fdee6b4a1c602  contracts/Unitroller.sol
-b5d06e0d725b01ecb8d0b88aa89300ddc0399904d84915a311f42f96970ba997  contracts/WhitePaperInterestRateModel.sol
-
-  ```
-
-  #### some of external calls in solidity files
-
-  ```bash
-
-$ egrep '\.\w*\(.*\)' contracts/* -nr
-contracts/BaseJumpRateModelV2.sol:85:        return borrows.mul(1e18).div(cash.add(borrows).sub(reserves));
-contracts/BaseJumpRateModelV2.sol:116:        uint oneMinusReserveFactor = uint(1e18).sub(reserveFactorMantissa);
-contracts/BaseJumpRateModelV2.sol:118:        uint rateToPool = borrowRate.mul(oneMinusReserveFactor).div(1e18);
-
-...
-
-contracts/Timelock.sol:64:        bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
-contracts/Timelock.sol:74:        bytes32 txHash = keccak256(abi.encode(target, value, signature, data, eta));
-contracts/Timelock.sol:99:        (bool success, bytes memory returnData) = target.call.value(value)(callData);
-contracts/WhitePaperInterestRateModel.sol:37:        baseRatePerBlock = baseRatePerYear.div(blocksPerYear);
-
-
-  ```
+The list differs from the original and has been adapted by the Algebra protocol team.
 
 ## General Review Approach:
 
 
 - [ ] All functions are `internal` except where explictly required to be `public`/`external`. [[?](https://blog.zeppelin.solutions/on-the-parity-wallet-multisig-hack-405a8c12e8f7)]
-- [ ] There are no arithmetic overflows/underflows in math operations.
-- [ ] Using the OpenZeppelin safe math library [[?](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/master/contracts/math)].
+- [ ] There are no unexpected arithmetic overflows/underflows in math operations.
 - [ ] Ether or tokens cannot be accidentally sent to the address `0x0`.
-- [ ] Conditions are checked using `require` before operations and state changes.
-- [ ] State is being set before and performing actions.
-- [ ] Protected from reentry attacks (A calling B calling A). [[?](https://medium.com/@gus_tavo_guim/reentrancy-attack-on-smart-contracts-how-to-identify-the-exploitable-and-an-example-of-an-attack-4470a2d8dfe4)]
-- [ ] Properly implements the ERC20 interface [[?](https://github.com/ethereum/eips/issues/20)].
-- [ ] Only using modifier if necessary in more than one place.
+- [ ] Conditions are checked before operations and state changes.
+- [ ] State is being set before performing actions.
+- [ ] Protected from reentry attacks (A calling B calling A).
+- [ ] Only using modifier if logic is necessary in more than one place.
 - [ ] All types are being explicitly set (e.g. using `uint256` instead of `uint`).
 - [ ] All methods and loops are within the maximum allowed gas limt.
 - [ ] There are no unnecessary initalizations in the constructor (remember, default values are set).
 - [ ] There is complete test coverage; every smart contract method and every possible type of input is being tested.
-- [ ] Performed fuzz testing by using random inputs.
+- [ ] Performed fuzz testing by using special tools like [Echidna](https://github.com/crytic/echidna).
 - [ ] Tested all the possible different states that the contract can be in.
 - [ ] Ether and token amounts are dealt in wei units.
-- [ ] The crowdsale end block/timestamp comes after start block/timestamp.
-- [ ] The crowdsale token exchange/conversion rate is properly set.
-- [ ] The crowdsale soft/hard cap is set.
-- [ ] The crowdsale min/max contribution allowed is set and tested.
-- [ ] The crowdsale whitelisting functionality is tested.
-- [ ] The crowdsale refund logic is tested.
-- [ ] Crowdsale participants are given their proportional token amounts or are allowed to claim their contribution.
-- [ ] The length of each stage of the crowdsale is properly configured (e.g. presale, public sale).
-- [ ] Specified which functions are intented to be controlled by the owner only (e.g. pausing crowdsale, progressing crowdsale stage, enabling distribution of tokens, etc..).
-- [ ] The crowdsale vesting logic is tested.
-- [ ] The crowdsale has a fail-safe mode that when enabled by owner, restricts calls to function and enables refund functionality.
-- [ ] The crowdsale has a fallback function in place if it makes reasonable sense.
+- [ ] Specified which functions are intented to be controlled with specific rights only
 - [ ] The fallback function does not accept call data or only accepts prefixed data to avoid function signature collisions.
 - [ ] Imported libraries have been previously audited and don't contain dyanmic parts that can be swapped out in future versions which can be be used maliciously. [[?](http://swende.se/blog/Devcon1-and-contract-security.html)]
-- [ ] Token transfer statements are wrapped in a `require`.
-- [ ] Using `require` and `assert` properly. Only use `assert` for things that should never happen, typically used to validate state after making changes.
+- [ ] Token transfer statements take into account the possibility of revert
+- [ ] Using `require`, `revert` and `assert` properly. Only use `assert` for things that should never happen, typically used to validate state after making changes.
 - [ ] Using `keccak256` instead of the alias `sha3`.
-- [ ] Protected from ERC20 short address attack. [[?](https://vessenes.com/the-erc20-short-address-attack-explained/)].
 - [ ] Protected from recursive call attacks.
+- [ ] Try-catch blocks are protected from gas-griefing attacks.
 - [ ] Arbitrary string inputs have length limits.
 - [ ] No secret data is exposed (all data on the blockchain is public).
 - [ ] Avoided using array where possible and using mappings instead.
-- [ ] Does not rely on block hashes for randomness (miners have influence on this).
-- [ ] Does not use `tx.origin` anywhere. [[?](https://vessenes.com/tx-origin-and-ethereum-oh-my/)]
+- [ ] Does not rely on block hashes for randomness.
+- [ ] Does not use `tx.origin` anywhere (if possible). [[?](https://vessenes.com/tx-origin-and-ethereum-oh-my/)]
 - [ ] Array items are shifted down when an item is deleted to avoid leaving a gap.
-- [ ] Use `revert` instead of `throw`.
 - [ ] Functions exit immediately when conditions aren't meant.
 - [ ] Using the latest stable version of Solidity.
 - [ ] Prefer pattern where receipient withdrawals funds instead of contract sending funds, however not always applicable.
@@ -156,7 +52,7 @@ contracts/WhitePaperInterestRateModel.sol:37:        baseRatePerBlock = baseRate
 - [ ] `V4` - Is its visibility set? (SWC-108)
 - [ ] `V5` - Is the purpose of the variable and other important information documented using natspec?
 - [ ] `V6` - Can it be packed with an adjacent storage variable?
-- [ ] [ ] `V7` - Can it be packed in a struct with more than 1 other variable?
+- [ ] `V7` - Can it be packed in a struct with more than 1 other variable?
 - [ ] `V8` - Use full 256 bit types unless packing with other variables.
 - [ ] `V9` - If it's a public array, is a separate function provided to return the full array?
 - [ ] `V10` - Only use `private` to intentionally prevent child contracts from accessing the variable, prefer `internal` for flexibility.
@@ -175,13 +71,13 @@ contracts/WhitePaperInterestRateModel.sol:37:        baseRatePerBlock = baseRate
 - [ ] `F4` - Can it be combined with another similar function?
 - [ ] `F5` - Validate all parameters are within safe bounds, even if the function can only be called by a trusted users.
 - [ ] `F6` - Is the checks before effects pattern followed? (SWC-107)
-- [ ]- `F7` - Check for front-running possibilities, such as the approve function. (SWC-114)
+- [ ] `F7` - Check for front-running possibilities, such as the approve function. (SWC-114)
 - [ ] `F8` - Is insufficient gas griefing possible? (SWC-126)
 - [ ] `F9` - Are the correct modifiers applied, such as `onlyOwner`/`requiresAuth`?
 - [ ] `F10` - Are return values always assigned?
 - [ ] `F11` - Write down and test invariants about state before a function can run correctly.
 - [ ] `F12` - Write down and test invariants about the return or any changes to state after a function has run.
-- [ ] `F13` - Take care when naming functions, because people will assume behavior based on the name.
+- [ ] `F13` - Does the name of the function correspond to its logic and tasks? Does the name help to understand the purpose of the function?
 - [ ] `F14` - If a function is intentionally unsafe (to save gas, etc), use an unwieldy name to draw attention to its risk.
 - [ ] `F15` - Are all arguments, return values, side effects and other information documented using natspec?
 - [ ] `F16` - If the function allows operating on another user in the system, do not assume `msg.sender` is the user being operated on.
@@ -265,6 +161,7 @@ contracts/WhitePaperInterestRateModel.sol:37:        baseRatePerBlock = baseRate
 - [ ] `S2` - Is it actually marked as view in the interface?
 - [ ] `S3` - If there is an error, could it cause DoS? Like `balanceOf()` reverting. (SWC-113)
 - [ ] `S4` - If the call entered an infinite loop, could it cause DoS?
+- [ ] `S5` - Can you rely on the resulting value? Is a read-only reentrance scenario possible?
 
 ## Events
 
@@ -277,7 +174,7 @@ contracts/WhitePaperInterestRateModel.sol:37:        baseRatePerBlock = baseRate
 ## Contract
 
 - [ ] `T1` - Use an SPDX license identifier.
-- [ ] `T2` - Are events emitted for every storage mutating function?
+- [ ] `T2` - Are events emitted for every important storage mutating function?
 - [ ] `T3` - Check for correct inheritance, keep it simple and linear. (SWC-125)
 - [ ] `T4` - Use a `receive() external payable` function if the contract should accept transferred ETH.
 - [ ] `T5` - Write down and test invariants about relationships between stored state.
@@ -296,6 +193,8 @@ contracts/WhitePaperInterestRateModel.sol:37:        baseRatePerBlock = baseRate
 - [ ] `P3` - Fuzz test as much as possible.
 - [ ] `P4` - Use symbolic execution where possible.
 - [ ] `P5` - Run Slither/Solhint and review all findings.
+- [ ] `P6` - Use test mutation checks if possible.
+- [ ] `P7` - Use code mutation checks if possible.
 
 ## DeFi
 
@@ -312,17 +211,7 @@ contracts/WhitePaperInterestRateModel.sol:37:        baseRatePerBlock = baseRate
 - [ ] `D11` - If your contract is a target for token approvals, do not make arbitrary calls from user input.
 
 
-
-## Platform
-Some Platform here that you can do Smart Contracts audits and get large $ bounty. 
-
-- [code4rena](https://code4rena.com/)
-- [HATS.FINANCE](https://hats.finance/)
-- [Immunefi](https://immunefi.com/)
-- [Sherlock](https://app.sherlock.xyz/audits/contests)
-
 ## List of Public SmartContracts Audits Reports
-I've mentioned here some public audits reports for learn audits. So, lets enjoy reading some cool audits reports.
 
 - [Consensys](https://consensys.net)  : [Reports](https://consensys.net/diligence/audits/)
 - [Peckshield](https://peckshield.com)  : [Reports](https://peckshield.com/#report)
@@ -353,4 +242,5 @@ I've mentioned here some public audits reports for learn audits. So, lets enjoy 
 - [Semgrep Smart-contracts](https://github.com/Decurity/semgrep-smart-contracts)
 - [Ethereum Security Guide](https://github.com/ethereum/wiki/wiki/Safety)
 - [Smart Contract Security Verification Standard](https://securing.github.io/SCSVS/)
+- [tamjid0x01 SmartContracts-audit-checklist](https://github.com/tamjid0x01/SmartContracts-audit-checklist)
 
