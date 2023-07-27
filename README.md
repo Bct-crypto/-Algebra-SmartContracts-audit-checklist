@@ -43,6 +43,10 @@ The list differs from the original and has been adapted by the Algebra protocol 
 - [ ] Prefer pattern where receipient withdrawals funds instead of contract sending funds, however not always applicable.
 - [ ] Resolved warnings from compiler.
 
+## Documentation
+
+- [ ] Verify the availability of documentation. There should be both high-level documentation and more detailed documentation.
+- [ ] Verify that the documentation clearly and precisely defines all trust boundaries in the contract (trusted relations with other contracts and significant data flows).
 
 ## Variables
 
