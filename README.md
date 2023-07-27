@@ -47,6 +47,7 @@ The list differs from the original and has been adapted by the Algebra protocol 
 
 - [ ] Verify the availability of documentation. There should be both high-level documentation and more detailed documentation.
 - [ ] Verify that the documentation clearly and precisely defines all trust boundaries in the contract (trusted relations with other contracts and significant data flows).
+- [ ] Verify that the contract logic and protocol parameters implementation corresponds to the documentation.
 
 ## Variables
 
