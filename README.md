@@ -138,8 +138,8 @@ The list differs from the original and has been adapted by the Algebra protocol 
 - [ ] `C39` - Comment the "why" as much as possible.
 - [ ] `C40` - Comment the "what" if using obscure syntax or writing unconventional code.
 - [ ] `C41` - Comment explanations + example inputs/outputs next to complex and fixed point math.
-- [ ] `C42` - Comment explanations wherever optimizations are done, along with an estimate of much gas they save.
-- [ ] `C43` - Comment explanations wherever certain optimizations are purposely avoided, along with an estimate of much gas they would/wouldn't save if implemented.
+- [ ] `C42` - Comment explanations wherever optimizations are done, along with an estimate of how much gas they save.
+- [ ] `C43` - Comment explanations wherever certain optimizations are purposely avoided, along with an estimate of how much gas they would/wouldn't save if implemented.
 - [ ] `C44` - Use `unchecked` blocks where overflow/underflow is impossible, or where an overflow/underflow is unrealistic on human timescales (counters, etc). Comment explanations wherever `unchecked` is used, along with an estimate of how much gas it saves (if relevant).
 - [ ] `C45` - Do not depend on Solidity's arithmetic operator precedence rules. In addition to the use of parentheses to override default operator precedence, parentheses should also be used to emphasise it.
 - [ ] `C46` - Expressions passed to logical/comparison operators (`&&`/`||`/`>=`/`==`/etc) should not have side-effects.
