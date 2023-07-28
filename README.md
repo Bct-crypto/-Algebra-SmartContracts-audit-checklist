@@ -26,7 +26,7 @@ The list differs from the original and has been adapted by the Algebra protocol 
 - [ ] Ether and token amounts are dealt in wei units.
 - [ ] Specified which functions are intented to be controlled with specific rights only
 - [ ] The fallback function does not accept call data or only accepts prefixed data to avoid function signature collisions.
-- [ ] Imported libraries have been previously audited and don't contain dyanmic parts that can be swapped out in future versions which can be be used maliciously. [[?](http://swende.se/blog/Devcon1-and-contract-security.html)]
+- [ ] Imported libraries have been previously audited and don't contain dynamic parts that can be swapped out in future versions which can be used maliciously. [[?](http://swende.se/blog/Devcon1-and-contract-security.html)]
 - [ ] Token transfer statements take into account the possibility of revert
 - [ ] Using `require`, `revert` and `assert` properly. Only use `assert` for things that should never happen, typically used to validate state after making changes.
 - [ ] Using `keccak256` instead of the alias `sha3`.
@@ -40,7 +40,7 @@ The list differs from the original and has been adapted by the Algebra protocol 
 - [ ] Array items are shifted down when an item is deleted to avoid leaving a gap.
 - [ ] Functions exit immediately when conditions aren't meant.
 - [ ] Using the latest stable version of Solidity.
-- [ ] Prefer pattern where receipient withdrawals funds instead of contract sending funds, however not always applicable.
+- [ ] Prefer pattern where recipient withdraws funds instead of contract sending funds, however not always applicable.
 - [ ] Resolved warnings from compiler.
 
 ## Documentation
