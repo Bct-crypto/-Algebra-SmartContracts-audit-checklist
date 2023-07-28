@@ -2,7 +2,7 @@
 
 Credit to Tamjid under MIT license: https://github.com/tamjid0x01/SmartContracts-audit-checklist
 
-This is not a comprehensive list and solidity is quickly evolving so please do due dilegence on your part.
+This is not a comprehensive list and solidity is quickly evolving so please do due diligence on your part.
 Not all listed items will apply to your specific smart contract.
 
 The list differs from the original and has been adapted by the Algebra protocol team.
@@ -10,7 +10,7 @@ The list differs from the original and has been adapted by the Algebra protocol 
 ## General Review Approach:
 
 
-- [ ] All functions are `internal` except where explictly required to be `public`/`external`. [[?](https://blog.zeppelin.solutions/on-the-parity-wallet-multisig-hack-405a8c12e8f7)]
+- [ ] All functions are `internal` except where explicitly required to be `public`/`external`. [[?](https://blog.zeppelin.solutions/on-the-parity-wallet-multisig-hack-405a8c12e8f7)]
 - [ ] There are no unexpected arithmetic overflows/underflows in math operations.
 - [ ] Ether or tokens cannot be accidentally sent to the address `0x0`.
 - [ ] Conditions are checked before operations and state changes.
@@ -18,13 +18,13 @@ The list differs from the original and has been adapted by the Algebra protocol 
 - [ ] Protected from reentry attacks (A calling B calling A).
 - [ ] Only using modifier if logic is necessary in more than one place.
 - [ ] All types are being explicitly set (e.g. using `uint256` instead of `uint`).
-- [ ] All methods and loops are within the maximum allowed gas limt.
-- [ ] There are no unnecessary initalizations in the constructor (remember, default values are set).
+- [ ] All methods and loops are within the maximum allowed gas limit.
+- [ ] There are no unnecessary initializations in the constructor (remember, default values are set).
 - [ ] There is complete test coverage; every smart contract method and every possible type of input is being tested.
 - [ ] Performed fuzz testing by using special tools like [Echidna](https://github.com/crytic/echidna).
 - [ ] Tested all the possible different states that the contract can be in.
 - [ ] Ether and token amounts are dealt in wei units.
-- [ ] Specified which functions are intented to be controlled with specific rights only
+- [ ] Specified which functions are intended to be controlled with specific rights only
 - [ ] The fallback function does not accept call data or only accepts prefixed data to avoid function signature collisions.
 - [ ] Imported libraries have been previously audited and don't contain dynamic parts that can be swapped out in future versions which can be used maliciously. [[?](http://swende.se/blog/Devcon1-and-contract-security.html)]
 - [ ] Token transfer statements take into account the possibility of revert
@@ -141,7 +141,7 @@ The list differs from the original and has been adapted by the Algebra protocol 
 - [ ] `C42` - Comment explanations wherever optimizations are done, along with an estimate of how much gas they save.
 - [ ] `C43` - Comment explanations wherever certain optimizations are purposely avoided, along with an estimate of how much gas they would/wouldn't save if implemented.
 - [ ] `C44` - Use `unchecked` blocks where overflow/underflow is impossible, or where an overflow/underflow is unrealistic on human timescales (counters, etc). Comment explanations wherever `unchecked` is used, along with an estimate of how much gas it saves (if relevant).
-- [ ] `C45` - Do not depend on Solidity's arithmetic operator precedence rules. In addition to the use of parentheses to override default operator precedence, parentheses should also be used to emphasise it.
+- [ ] `C45` - Do not depend on Solidity's arithmetic operator precedence rules. In addition to the use of parentheses to override default operator precedence, parentheses should also be used to emphasize it.
 - [ ] `C46` - Expressions passed to logical/comparison operators (`&&`/`||`/`>=`/`==`/etc) should not have side-effects.
 - [ ] `C47` - Wherever arithmetic operations are performed that could result in precision loss, ensure it benefits the right actors in the system, and document it with comments.
 - [ ] `C48` - Document the reason why a reentrancy lock is necessary whenever it's used with an inline or `@dev` natspec comment.
